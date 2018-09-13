@@ -1,0 +1,13 @@
+echo
+FOR /F "delims=: tokens=2" %%a in ('ipconfig ^| find "IPv4"') do set _IPAddress=%%a
+ECHO IPv4:%_IPAddress%
+set _NET=%_IPAddress:~8,2%
+set _PC=%_IPAddress:~11,3%
+
+echo
+netsh interface ipv6 add address "區域連線" 2001:288:1011:%_NET%::%_PC%
+netsh interface ipv6 add route ::/0 "區域連線" 2001:288:1011:%_NET%::ffff
+netsh interface ipv6 set dnsservers "區域連線" static 2001:4860:4860::8888 primary
+netsh interface ipv6 add dnsservers "區域連線" 2001:4860:4860::1111 index=2
+echo 已將IPv6地址設為：2001:288:1011:97::1xxx，按任一鍵後繼續……
+pause
